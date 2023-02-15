@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selector test</title>
+</head>
+
+<body>
+  <div class="super-navbar__actions "><a href="https://steventhemaker.lemonsqueezy.com/?utm_sa_link_event=explore_templates" class="notion-link" target="_blank" rel="noopener noreferrer" onclick="saAutomatedLink(this, 'outbound');">
+      <div class="super-navbar__cta">Explore templates</div>
+    </a>
+    <div class="super-navbar__button super-navbar__menu-open"><!--$--><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" style="width:1.25rem;height:1.25rem;fill:var(--color-text-default-light)">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg><!--/$--></div>
+  </div>
+
+
+  <div class="super-navbar__actions "><a href="https://steventhemaker.lemonsqueezy.com/?utm_sa_link_event=explore_templates&test=yash" class="notion-link" target="_blank" rel="noopener noreferrer" onclick="saAutomatedLink(this, 'outbound');">
+      <div class="super-navbar__cta">Explore templates</div>
+    </a>
+    <div class="super-navbar__button super-navbar__menu-open"><!--$--><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" style="width:1.25rem;height:1.25rem;fill:var(--color-text-default-light)">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg><!--/$--></div>
+  </div>
+
+  <script>
+    (function () {
+      function get_params_from_href(href) {
+        var paramstr = href.split('?')[1];        // get what's after '?' in the href
+        var paramsarr = paramstr.split('&');      // get all key-value items
+        var params = {};
+        for (var i = 0; i < paramsarr.length; i++) {
+          var tmparr = paramsarr[i].split('='); // split key from value
+          params[tmparr[0]] = tmparr[1];        // sort them in a obj[key] = value way
+        }
+        return params;
+      }
+
+      function saLoadedLinkEvents() {
+        document
+          .querySelectorAll("a[href*='utm_sa_link_event']")
+          .forEach(function (element) {
+            var href = element.getAttribute("href");
+
+            console.log('href', href);
+
+            var name = href.split('utm_sa_link_event=');
+            var params = get_params_from_href(href);
+
+
+            console.log('name', params);
+
+            var eventName = params.utm_sa_link_event;
+            console.log('eventName', eventName)
+            if (!href || !window.sa_event || !window.sa_loaded) return;
+
+            element.addEventListener("click", function (event) {
+              var target = element.getAttribute("target");
+              if (target === "_blank") {
+                event.preventDefault();
+                window.sa_event(eventName, function () {
+                  window.location.href = href;
+                });
+                return false;
+              } else {
+                window.sa_event(eventName);
+                return true;
+              }
+            });
+          });
+      }
+
+      if (document.readyState === "ready" || document.readyState === "complete") {
+        saLoadedLinkEvents();
+      } else {
+        document.addEventListener("readystatechange", function (event) {
+          if (event.target.readyState === "complete") saLoadedLinkEvents();
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>
