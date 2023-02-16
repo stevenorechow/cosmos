@@ -192,7 +192,7 @@ body {
 
 .notion-header__title,
 .notion-header__icon {
- text-align: center !important;
+  display: none !important;
 }
 
 .notion-header__cover.has-cover {
