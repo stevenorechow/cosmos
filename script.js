@@ -1,169 +1,63 @@
-var darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)'),
-  getCurrentTheme = () => localStorage.getItem('theme'),
-  saveThemeInLocalStorage = (e) => localStorage.setItem('theme', e),
-  isThemeDark = () => 'dark' === getCurrentTheme(),
-  isThemeLight = () => 'light' === getCurrentTheme();
-function setLightMode() {
-  document.querySelector('html').classList.add('theme-default'),
-    document.querySelector('html').classList.remove('theme-blackout'),
-    saveThemeInLocalStorage('light'),
-    console.info('Light mode activated.');
-}
-function setDarkMode() {
-  document.querySelector('html').classList.add('theme-blackout'),
-    document.querySelector('html').classList.remove('theme-default'),
-    saveThemeInLocalStorage('dark'),
-    console.info('Dark mode activated.');
-}
-function setInitialTheme() {
-  'dark' === getCurrentTheme() ||
-  (!getCurrentTheme() && darkModeMediaQuery.matches)
-    ? setDarkMode()
-    : setLightMode();
-}
-function toggleThemeMode() {
-  var e = getCurrentTheme();
-  'dark' === e || (!e && darkModeMediaQuery.matches)
-    ? setLightMode()
-    : setDarkMode();
-}
-function createSVGWrapper() {
-  var e = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  return (
-    e.setAttribute('viewBox', '0 0 24 24'),
-    e.setAttribute('fill', 'currentColor'),
-    e
-  );
-}
-function createDarkModeIcon() {
-  var e = createSVGWrapper(),
-    t = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  return (
-    t.setAttribute('d', 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'),
-    e.appendChild(t),
-    e
-  );
-}
-function createLightModeIcon() {
-  var e = createSVGWrapper(),
-    t = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  return (
-    (circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')),
-    t.setAttribute(
-      'd',
-      'M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42'
-    ),
-    e.setAttribute('fill', 'none'),
-    e.setAttribute('stroke', '#fff'),
-    e.setAttribute('stroke-width', '2'),
-    e.setAttribute('stroke-linecap', 'round'),
-    e.setAttribute('stroke-linejoin', 'round'),
-    circle.setAttribute('cx', '12'),
-    circle.setAttribute('r', '5'),
-    circle.setAttribute('cy', '12'),
-    e.appendChild(t),
-    e.appendChild(circle),
-    e
-  );
-}
-function createThemeSwitch() {
-  var e = document.createElement('div');
-  e.classList.add('theme-switch');
-  var t = document.createElement('div');
-  t.classList.add('dark-mode-icon');
-  var r = document.createElement('div');
-  return (
-    r.classList.add('light-mode-icon'),
-    e.appendChild(t),
-    e.appendChild(r),
-    t.appendChild(createDarkModeIcon()),
-    r.appendChild(createLightModeIcon()),
-    e
-  );
-}
-function addThemeSwitcher() {
-  var e = createThemeSwitch(),
-    t = document.querySelector('.super-navbar');
-  t
-    ? t.querySelector('.theme-switch')
-      ? console.info('The theme switcher was already added.')
-      : (t.append(e), e.addEventListener('click', toggleThemeMode))
-    : console.info('You need to add a navbar to the page.');
-}
+// COSMOS CODE
 function onPageLoad() {
-  const e = document.querySelector('.notion-header'),
-    t = document.querySelectorAll('.notion-dropdown__option'),
-    r = document.querySelector('.notion-dropdown__button-title'),
-    o = () => {
-      const e = document.querySelector('.footer-cover');
-      e && e.remove();
-      const t = document.querySelector('.notion-header__cover').cloneNode(!0);
-      t.classList.add('footer-cover'),
-        t.classList.remove('notion-header__cover', 'has-cover'),
-        document.querySelector('.super-content').appendChild(t);
-    };
-  o();
-  t &&
-    r &&
-    ((e, t) => {
-      Array.from(e)
-        .find((e) => e.textContent === t)
-        .classList.add('active-filter'),
-        e.forEach((e) => {
-          e.addEventListener('click', () => {
-            const t = document.querySelector('.active-filter');
-            t && t.classList.remove('active-filter'),
-              e.classList.add('active-filter');
-          });
-        });
-    })(t, r.textContent);
-  new MutationObserver(function (e, t) {
-    for (const t of e) 'characterData' === t.type && o();
-  }).observe(e, { subtree: !0, characterData: !0 });
-}
-setInitialTheme(),
-  (window.onload = function () {
-    addThemeSwitcher();
-  }),
-  document.addEventListener('DOMContentLoaded', onPageLoad);
+  const header = document.querySelector('.notion-header');
 
-/**
- * CODE FOR OUTBOUND CLICK TRACK SIMPLE ANALYTICS
-*/
-(function () {
-  function get_params_from_href(href) {
-    var paramstr = href.split('?')[1];        // get what's after '?' in the href
-    var paramsarr = paramstr.split('&');      // get all key-value items
-    var params = {};
-    for (var i = 0; i < paramsarr.length; i++) {
-      var tmparr = paramsarr[i].split('='); // split key from value
-      params[tmparr[0]] = tmparr[1];        // sort them in a obj[key] = value way
+  const footerCover = () => {
+    const footerCoverNode = document.querySelector('.footer-cover');
+    if (footerCoverNode) {
+      footerCoverNode.remove();
     }
-    return params;
+    const cover = document.querySelector('.notion-header__cover');
+    const clone = cover.cloneNode(true);
+    clone.classList.add('footer-cover');
+    clone.classList.remove('notion-header__cover', 'has-cover');
+    const content = document.querySelector('.super-content');
+
+    content.appendChild(clone);
   }
+  footerCover();
 
-  function saLoadedLinkEvents() {
-    document
-      .querySelectorAll("a[href*='utm_sa_link_event']")
-      .forEach(function (element) {
-        var href = element.getAttribute("href");
-        var params = get_params_from_href(href);
-        var eventName = params.utm_sa_link_event;
-        
-        if (!href || !window.sa_event || !window.sa_loaded) return;
+  const config = { subtree: true, characterData: true };
 
-        element.addEventListener("click", function (event) {
-          window.sa_event(eventName);
-          return true;
+  const callback = function (mutationsList, observer) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'characterData') {
+        footerCover();
+      }
+    }
+  };
+
+  const observer = new MutationObserver(callback);
+  observer.observe(header, config);
+}
+
+document.addEventListener("DOMContentLoaded", onPageLoad);
+
+
+
+// SIMPLE ANALYTICS
+(function () {
+  function e() {
+    document.querySelectorAll("a[href*='utm_sa_link_event']").forEach(function (e) {
+      var t = e.getAttribute("href"),
+        r = (function e(t) {
+          for (var r = t.split("?")[1].split("&"), a = {}, o = 0; o < r.length; o++) {
+            var n = r[o].split("=");
+            a[n[0]] = n[1];
+          }
+          return a;
+        })(t).utm_sa_link_event;
+      t &&
+        window.sa_event &&
+        window.sa_loaded &&
+        e.addEventListener("click", function (e) {
+          return window.sa_event(r), !0;
         });
-      });
-  }
-
-  if (document.readyState === "ready" || document.readyState === "complete") {
-    saLoadedLinkEvents();
-  } else {
-    document.addEventListener("readystatechange", function (event) {
-      if (event.target.readyState === "complete") saLoadedLinkEvents();
     });
   }
+  "ready" === document.readyState || "complete" === document.readyState
+    ? e()
+    : document.addEventListener("readystatechange", function (t) {
+      "complete" === t.target.readyState && e();
+    });
 })();
