@@ -177,6 +177,10 @@ body {
   line-height: 1.25 !important;
 }
 
+.notion-page__properties {
+  display: none !important;
+}
+
 .notion-header__cover.has-cover {
   top: 0 !important;
   margin-top: -20px !important;
